@@ -1,7 +1,19 @@
 # Changelog
 
 
+## v0.1.1
+
+
+### 🚀 Enhancements
+
+- Add create server sent event ([2006baa](https://github.com/xcvzmoon/express-utils/commit/2006baa))
+
+### ❤️ Contributors
+
+- Mon Albert Gamil <mrgamilmonalbert@gmail.com>
+
 ## v0.1.0
+
 
 ### 💅 Refactors
 
