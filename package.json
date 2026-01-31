@@ -1,7 +1,44 @@
 {
-  "name": "scaffold-bun",
+  "name": "@xcvzmoon/express-utils",
+  "description": "A collection of utilities for Express",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Mon Albert Gamil",
+    "email": "mrgamilmonalbert@gmail.com",
+    "url": "https://github.com/xcvzmoon/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xcvzmoon/express-utils"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "express",
+    "zod",
+    "validator",
+    "schema"
+  ],
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "format": "oxfmt && oxfmt --check",
     "lint": "oxlint --type-aware",
