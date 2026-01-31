@@ -4,11 +4,15 @@ A collection of utilities for Express. More will be added over time.
 
 ## Current utilities
 
-Right now the package focuses on **request validation with [Zod](https://zod.dev)**:
+**Request validation with [Zod](https://zod.dev):**
 
 - **`readValidatedBody`** — validate and type `req.body` with a Zod schema
 - **`readValidatedParams`** — validate and type `req.params` with a Zod schema
 - **`readValidatedQuery`** — validate and type `req.query` with a Zod schema
+
+**Multipart form data:**
+
+- **`getMultipartFormData`** — parse `multipart/form-data` and get uploaded files as `{ name, filename, mimeType, buffer }[]`, or `null` if the request is not multipart
 
 ## Install
 
@@ -19,6 +23,8 @@ npm i @xcvzmoon/express-utils express zod
 ```
 
 ## Usage
+
+**Zod validation:**
 
 ```ts
 import {
@@ -37,6 +43,20 @@ app.post('/users/:id', (req, res) => {
   const params = readValidatedParams(req, paramsSchema);
   const query = readValidatedQuery(req, querySchema);
   // body, params, query are typed and validated
+});
+```
+
+**Multipart form data:**
+
+```ts
+import { getMultipartFormData } from '@xcvzmoon/express-utils';
+
+app.post('/upload', async (req, res) => {
+  const files = await getMultipartFormData(req);
+  if (files === null) return res.status(400).send('Expected multipart/form-data');
+  for (const { name, filename, mimeType, buffer } of files) {
+    // handle each uploaded file
+  }
 });
 ```
 
