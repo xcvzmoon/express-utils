@@ -14,6 +14,10 @@ A collection of utilities for Express. More will be added over time.
 
 - **`readMultipartFormData`** — parse `multipart/form-data` and get uploaded files as `{ name, filename, mimeType, buffer }[]`, or `null` if the request is not multipart (uses [busboy](https://github.com/mscdex/busboy))
 
+**Server-Sent Events (SSE):**
+
+- **`createServerSentEvent`** — set up an Express response for SSE and get `{ push, pushComment, close, closed }` to send events, comments, and close the connection
+
 ## Install
 
 ```sh
@@ -57,6 +61,25 @@ app.post('/upload', async (req, res) => {
   for (const { name, filename, mimeType, buffer } of files) {
     // handle each uploaded file
   }
+});
+```
+
+**Server-Sent Events:**
+
+```ts
+import { createServerSentEvent } from '@xcvzmoon/express-utils';
+
+app.get('/events', (req, res) => {
+  const sse = createServerSentEvent(res);
+
+  sse.push('data: Connected\n\n');
+
+  const heartbeat = setInterval(() => sse.pushComment('heartbeat'), 10000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    sse.close();
+  });
 });
 ```
 

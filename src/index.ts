@@ -1,5 +1,6 @@
 export type { MultipartFormData } from './read-multipart-form-data';
 
+export { createServerSentEvent } from './create-server-sent-event';
 export { readMultipartFormData } from './read-multipart-form-data';
 export { readValidatedBody } from './read-validated-body';
 export { readValidatedParams } from './read-validated-params';
