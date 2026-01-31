@@ -8,6 +8,8 @@
     "dev": "bun --watch ./src/index.ts",
     "build": "bunx --bun tsdown",
     "start": "bun ./dist/index.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "changelog:bump": "bunx changelogen@latest --bump",
     "changelog:release": "bunx changelogen@latest --release"
   },
@@ -19,6 +21,7 @@
     "oxlint": "^1.42.0",
     "oxlint-tsgolint": "^0.11.4",
     "tsdown": "^0.20.1",
+    "vitest": "^4.0.18",
     "zod": "^4.3.6"
   },
   "peerDependencies": {
