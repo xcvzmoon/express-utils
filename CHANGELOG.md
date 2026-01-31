@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v0.0.2
+
+
+### 🚀 Enhancements
+
+- Add getMultipartFormData ([804757d](https://github.com/xcvzmoon/express-utils/commit/804757d))
+
+### ❤️ Contributors
+
+- Mon Albert Gamil <mrgamilmonalbert@gmail.com>
+
 ## v0.0.1
 
 
