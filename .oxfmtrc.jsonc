@@ -12,6 +12,7 @@
       ["sibling"],
       ["index"],
     ],
+    "newlinesBetween": false,
   },
   "singleQuote": true,
   "ignorePatterns": [
