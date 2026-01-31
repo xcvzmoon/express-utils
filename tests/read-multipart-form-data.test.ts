@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 import { Readable } from 'stream';
 import { describe, expect, it } from 'vitest';
-import { getMultipartFormData } from '../src/get-multipart-form-data';
+import { readMultipartFormData } from '../src/read-multipart-form-data';
 
 function createMultipartRequest(contentType: string, body: Buffer | string): Request {
   const stream = Readable.from([typeof body === 'string' ? Buffer.from(body, 'utf8') : body]);
@@ -25,11 +25,11 @@ function buildMultipartBody(
   ].join('');
 }
 
-describe('getMultipartFormData', () => {
+describe('readMultipartFormData', () => {
   describe('non-multipart requests', () => {
     it('returns null when content-type is missing', async () => {
       const req = Object.assign(Readable.from([]), { headers: {} }) as Request;
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).toBeNull();
     });
 
@@ -37,7 +37,7 @@ describe('getMultipartFormData', () => {
       const req = Object.assign(Readable.from([]), {
         headers: { 'content-type': 'application/json' },
       }) as Request;
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).toBeNull();
     });
 
@@ -45,7 +45,7 @@ describe('getMultipartFormData', () => {
       const req = Object.assign(Readable.from([]), {
         headers: { 'content-type': 'text/plain' },
       }) as Request;
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).toBeNull();
     });
 
@@ -53,7 +53,7 @@ describe('getMultipartFormData', () => {
       const req = Object.assign(Readable.from([]), {
         headers: { 'content-type': ' Multipart/form-data; boundary=----x' },
       }) as Request;
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).toBeNull();
     });
   });
@@ -69,7 +69,7 @@ describe('getMultipartFormData', () => {
         content: 'Hello world',
       });
       const req = createMultipartRequest(`multipart/form-data; boundary=${boundary}`, body);
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).not.toBeNull();
       expect(result).toHaveLength(1);
       expect(result![0]).toEqual({
@@ -94,7 +94,7 @@ describe('getMultipartFormData', () => {
         `\r\n--${b}--\r\n`,
       ].join('');
       const req = createMultipartRequest(`multipart/form-data; boundary=${b}`, body);
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).not.toBeNull();
       expect(result).toHaveLength(2);
       expect(result![0]).toMatchObject({
@@ -102,13 +102,13 @@ describe('getMultipartFormData', () => {
         filename: 'a.txt',
         mimeType: 'text/plain',
       });
-      expect(result![0].buffer.toString()).toBe('content-a');
-      expect(result![1]).toMatchObject({
+      expect(result?.[0]?.buffer.toString()).toBe('content-a');
+      expect(result?.[1]).toMatchObject({
         name: 'b',
         filename: 'b.json',
         mimeType: 'application/json',
       });
-      expect(result![1].buffer.toString()).toBe('{"x":1}');
+      expect(result?.[1]?.buffer.toString()).toBe('{"x":1}');
     });
 
     it('returns empty array when multipart has no file field', async () => {
@@ -120,7 +120,7 @@ describe('getMultipartFormData', () => {
         `\r\n--${b}--\r\n`,
       ].join('');
       const req = createMultipartRequest(`multipart/form-data; boundary=${b}`, body);
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).not.toBeNull();
       expect(result).toEqual([]);
     });
@@ -139,9 +139,9 @@ describe('getMultipartFormData', () => {
       ];
       const bodyBuffer = Buffer.concat(parts);
       const req = createMultipartRequest(`multipart/form-data; boundary=${b}`, bodyBuffer);
-      const result = await getMultipartFormData(req);
+      const result = await readMultipartFormData(req);
       expect(result).not.toBeNull();
-      expect(result![0].buffer).toEqual(binary);
+      expect(result?.[0]?.buffer).toEqual(binary);
     });
   });
 });

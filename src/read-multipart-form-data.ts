@@ -1,5 +1,5 @@
 import type { Request } from 'express';
-import { Busboy } from '@fastify/busboy';
+import busboy from 'busboy';
 
 export type MultipartFormData = {
   name: string;
@@ -15,32 +15,36 @@ export type MultipartFormData = {
  * @returns A promise that resolves to an array of MultipartFormData objects representing uploaded files,
  *          or null if the request is not multipart/form-data.
  */
-export async function getMultipartFormData(req: Request): Promise<MultipartFormData[] | null> {
+export async function readMultipartFormData(req: Request): Promise<MultipartFormData[] | null> {
   const contentType = getContentType(req);
   if (!contentType) return null;
 
-  const busboy = new Busboy({ headers: { ...req.headers, 'content-type': contentType } });
+  const bb = busboy({ headers: req.headers });
   const promises: Promise<MultipartFormData>[] = [];
 
-  busboy.on('file', (fieldname, stream, filename, _transferEncoding, mimeType) => {
+  bb.on('file', function (name, file, info) {
     const chunks: Buffer[] = [];
 
-    stream.on('data', (chunk: Buffer) => chunks.push(chunk));
+    file.on('data', function (chunk: Buffer) {
+      chunks.push(chunk);
+    });
+
     promises.push(
-      new Promise((resolve, reject) => {
-        stream.on('end', () => {
-          const name = fieldname;
+      new Promise(function (resolve, reject) {
+        file.on('end', function () {
+          const filename = info.filename;
+          const mimeType = info.mimeType;
           const buffer = Buffer.concat(chunks);
           resolve({ name, filename, mimeType, buffer });
         });
 
-        stream.on('error', reject);
+        file.on('error', reject);
       }),
     );
   });
 
   return new Promise((resolve, reject) => {
-    busboy.on('finish', () => {
+    bb.on('finish', () => {
       Promise.all(promises)
         .then((files) => {
           resolve(files);
@@ -54,8 +58,8 @@ export async function getMultipartFormData(req: Request): Promise<MultipartFormD
         });
     });
 
-    busboy.on('error', reject);
-    req.pipe(busboy);
+    bb.on('error', reject);
+    req.pipe(bb);
   });
 }
 

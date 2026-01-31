@@ -12,7 +12,7 @@ A collection of utilities for Express. More will be added over time.
 
 **Multipart form data:**
 
-- **`getMultipartFormData`** — parse `multipart/form-data` and get uploaded files as `{ name, filename, mimeType, buffer }[]`, or `null` if the request is not multipart
+- **`readMultipartFormData`** — parse `multipart/form-data` and get uploaded files as `{ name, filename, mimeType, buffer }[]`, or `null` if the request is not multipart (uses [busboy](https://github.com/mscdex/busboy))
 
 ## Install
 
@@ -49,10 +49,10 @@ app.post('/users/:id', (req, res) => {
 **Multipart form data:**
 
 ```ts
-import { getMultipartFormData } from '@xcvzmoon/express-utils';
+import { readMultipartFormData } from '@xcvzmoon/express-utils';
 
 app.post('/upload', async (req, res) => {
-  const files = await getMultipartFormData(req);
+  const files = await readMultipartFormData(req);
   if (files === null) return res.status(400).send('Expected multipart/form-data');
   for (const { name, filename, mimeType, buffer } of files) {
     // handle each uploaded file
