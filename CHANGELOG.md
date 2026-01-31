@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v0.1.0
+
+### 💅 Refactors
+
+- ⚠️  Switch to readMultipartFormData ([0aca18a](https://github.com/xcvzmoon/express-utils/commit/0aca18a))
+
+### ❤️ Contributors
+
+- Mon Albert Gamil <mrgamilmonalbert@gmail.com>
+
 ## v0.0.2
 
 

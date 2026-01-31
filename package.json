@@ -2,7 +2,7 @@
   "name": "@xcvzmoon/express-utils",
   "description": "A collection of utilities for Express",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "license": "MIT",
   "author": {
     "name": "Mon Albert Gamil",
@@ -21,7 +21,8 @@
     "express",
     "zod",
     "validator",
-    "schema"
+    "schema",
+    "multipart"
   ],
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
